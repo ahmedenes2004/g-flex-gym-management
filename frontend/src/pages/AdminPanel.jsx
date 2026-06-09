@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { API_URL } from '../config';
 
 const AdminPanel = () => {
     const { user } = useContext(AuthContext);
@@ -22,8 +23,8 @@ const AdminPanel = () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
                 const [statsRes, usersRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/stats', config),
-                    axios.get('http://localhost:5000/api/users', config)
+                    axios.get(`${API_URL}/api/stats`, config),
+                    axios.get(`${API_URL}/api/users`, config)
                 ]);
                 setStats(statsRes.data);
                 setUsersList(usersRes.data);
@@ -40,7 +41,7 @@ const AdminPanel = () => {
     const handleRoleChange = async (userId, newRole) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`http://localhost:5000/api/users/${userId}/role`, { role: newRole }, config);
+            await axios.put(`${API_URL}/api/users/${userId}/role`, { role: newRole }, config);
             
             // Update local state
             setUsersList(usersList.map(u => u._id === userId ? { ...u, role: newRole } : u));
@@ -54,7 +55,7 @@ const AdminPanel = () => {
         if (window.confirm('Bu kullanıcıyı tamamen silmek istediğinize emin misiniz?')) {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                await axios.delete(`http://localhost:5000/api/users/${userId}`, config);
+                await axios.delete(`${API_URL}/api/users/${userId}`, config);
                 setUsersList(usersList.filter(u => u._id !== userId));
                 alert('Kullanıcı başarıyla silindi!');
             } catch (error) {

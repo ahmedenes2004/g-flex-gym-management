@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNotification } from '../components/Notification';
+import { API_URL } from '../config';
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
@@ -36,8 +37,8 @@ const Dashboard = () => {
                 
                 // Fetch classes and payments
                 const [classesRes, paymentsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/classes'),
-                    axios.get('http://localhost:5000/api/payments', config)
+                    axios.get(`${API_URL}/api/classes`),
+                    axios.get(`${API_URL}/api/payments`, config)
                 ]);
 
                 // 1. Filter enrolled classes

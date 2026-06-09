@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { useNotification } from '../components/Notification';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { API_URL } from '../config';
 
 const Profile = () => {
     const { user, updateProfile } = useContext(AuthContext);
@@ -47,7 +48,7 @@ const Profile = () => {
         setLoading(true);
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.put('http://localhost:5000/api/auth/profile', {
+            const { data } = await axios.put(`${API_URL}/api/auth/profile`, {
                 height: Number(height),
                 weight: Number(weight),
                 targetWeight: Number(targetWeight)

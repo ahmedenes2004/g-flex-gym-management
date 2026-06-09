@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import CreditCard from '../components/CreditCard';
 import { useNotification } from '../components/Notification';
+import { API_URL } from '../config';
 
 const Payments = () => {
     const [payments, setPayments] = useState([]);
@@ -26,7 +27,7 @@ const Payments = () => {
     const fetchPayments = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.get('http://localhost:5000/api/payments', config);
+            const { data } = await axios.get(`${API_URL}/api/payments`, config);
             setPayments(data);
         } catch (error) {
             console.error('Ödemeler yüklenirken hata', error);
@@ -88,7 +89,7 @@ const Payments = () => {
 
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.post('http://localhost:5000/api/payments', { amount: Number(amount), plan }, config);
+            await axios.post(`${API_URL}/api/payments`, { amount: Number(amount), plan }, config);
             showNotification('Ödeme başarıyla tamamlandı! Üyeliğiniz güncellendi.', 'success');
             
             // Reset fields

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import WeeklyCalendar from '../components/WeeklyCalendar';
 import { useNotification } from '../components/Notification';
+import { API_URL } from '../config';
 
 const Classes = () => {
     const [classes, setClasses] = useState([]);
@@ -31,7 +32,7 @@ const Classes = () => {
 
     const fetchClasses = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/classes');
+            const { data } = await axios.get(`${API_URL}/api/classes`);
             setClasses(data);
         } catch (error) {
             console.error('Dersler yüklenirken hata oluştu', error);
@@ -49,7 +50,7 @@ const Classes = () => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.post('http://localhost:5000/api/classes', {
+            await axios.post(`${API_URL}/api/classes`, {
                 name, description, schedule, capacity
             }, config);
             showNotification('Ders başarıyla oluşturuldu!', 'success');
@@ -66,7 +67,7 @@ const Classes = () => {
     const handleEnroll = async (id) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`http://localhost:5000/api/classes/${id}/enroll`, {}, config);
+            await axios.put(`${API_URL}/api/classes/${id}/enroll`, {}, config);
             showNotification('Başarıyla derse kayıt oldunuz!', 'success');
             fetchClasses();
         } catch (error) {
@@ -78,7 +79,7 @@ const Classes = () => {
         if (window.confirm('Bu dersi silmek istediğinize emin misiniz?')) {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                await axios.delete(`http://localhost:5000/api/classes/${id}`, config);
+                await axios.delete(`${API_URL}/api/classes/${id}`, config);
                 showNotification('Ders başarıyla silindi.', 'success');
                 fetchClasses();
             } catch (error) {
