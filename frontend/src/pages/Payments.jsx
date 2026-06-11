@@ -10,6 +10,7 @@ const Payments = () => {
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
     const { showNotification } = useNotification();
+    const [privacyMode, setPrivacyMode] = useState(true);
 
     const [amount, setAmount] = useState('30');
     const [plan, setPlan] = useState('Monthly');
@@ -200,15 +201,54 @@ const Payments = () => {
 
                 {/* History Side */}
                 <div>
-                    <h3 className="mb-3">Ödeme Geçmişi</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                        <h3 style={{ margin: 0 }}>Ödeme Geçmişi</h3>
+                        <button 
+                            className="btn" 
+                            style={{ 
+                                padding: '0.4rem 0.8rem', 
+                                fontSize: '0.8rem', 
+                                background: privacyMode ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)', 
+                                color: privacyMode ? 'var(--danger)' : 'var(--success)',
+                                border: `1px solid ${privacyMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                borderRadius: '6px'
+                            }}
+                            type="button"
+                            onClick={() => setPrivacyMode(!privacyMode)}
+                        >
+                            {privacyMode ? (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                    <span>Gizlilik Modu: Aktif</span>
+                                </>
+                            ) : (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span>Gizlilik Modu: Pasif</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                     {loading ? <p>Yükleniyor...</p> : (
                         <div className="grid grid-cols-1" style={{ gap: '1rem' }}>
                             {payments.map(payment => (
                                 <div key={payment._id} className="glass glass-panel" style={{ padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
-                                        <h4 style={{ color: 'var(--success)', fontWeight: 'bold' }}>${payment.amount}</h4>
+                                        <h4 style={{ color: 'var(--success)', fontWeight: 'bold' }} className={privacyMode ? 'privacy-blur' : ''}>${payment.amount}</h4>
                                         <p className="text-muted text-sm">{payment.plan === 'Monthly' ? 'Aylık' : (payment.plan === 'Quarterly' ? '3 Aylık' : 'Yıllık')} Plan</p>
-                                        {user.role === 'admin' && <p className="text-muted mt-1" style={{ fontSize: '0.8rem' }}>Üye: {payment.user?.name}</p>}
+                                        {user.role === 'admin' && (
+                                            <p className={`text-muted mt-1 ${privacyMode ? 'privacy-blur' : ''}`} style={{ fontSize: '0.8rem' }}>
+                                                Üye: {payment.user?.name || 'Bilinmeyen Üye'}
+                                            </p>
+                                        )}
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
                                         <span style={{ 

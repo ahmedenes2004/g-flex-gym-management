@@ -2,7 +2,9 @@ import GymClass from '../models/GymClass.js';
 
 const getClasses = async (req, res, next) => {
     try {
-        const classes = await GymClass.find({}).populate('trainer', 'name email');
+        const classes = await GymClass.find({})
+            .populate('trainer', 'name email')
+            .populate('enrolledMembers', 'name email');
         res.json(classes);
     } catch (error) {
         next(error);
@@ -77,4 +79,65 @@ const deleteClass = async (req, res, next) => {
     }
 };
 
-export { getClasses, createClass, enrollClass, deleteClass };
+// @desc    Admin manually enrolls a user
+// @route   PUT /api/classes/:id/admin-enroll
+// @access  Private/Admin or Trainer
+const adminEnrollUser = async (req, res, next) => {
+    try {
+        const { userId } = req.body;
+        const gymClass = await GymClass.findById(req.params.id);
+
+        if (!gymClass) {
+            res.status(404);
+            throw new Error('Ders bulunamadı');
+        }
+
+        if (gymClass.enrolledMembers.includes(userId)) {
+            res.status(400);
+            throw new Error('Kullanıcı zaten bu derse kayıtlı');
+        }
+
+        if (gymClass.enrolledMembers.length >= gymClass.capacity) {
+            res.status(400);
+            throw new Error('Ders kontenjanı dolu');
+        }
+
+        gymClass.enrolledMembers.push(userId);
+        await gymClass.save();
+
+        res.json({ message: 'Kullanıcı derse başarıyla eklendi' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Admin manually removes a user
+// @route   PUT /api/classes/:id/admin-unenroll
+// @access  Private/Admin or Trainer
+const adminUnenrollUser = async (req, res, next) => {
+    try {
+        const { userId } = req.body;
+        const gymClass = await GymClass.findById(req.params.id);
+
+        if (!gymClass) {
+            res.status(404);
+            throw new Error('Ders bulunamadı');
+        }
+
+        if (!gymClass.enrolledMembers.includes(userId)) {
+            res.status(400);
+            throw new Error('Kullanıcı bu derse kayıtlı değil');
+        }
+
+        gymClass.enrolledMembers = gymClass.enrolledMembers.filter(
+            (id) => id.toString() !== userId.toString()
+        );
+        await gymClass.save();
+
+        res.json({ message: 'Kullanıcı dersten başarıyla çıkarıldı' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { getClasses, createClass, enrollClass, deleteClass, adminEnrollUser, adminUnenrollUser };
