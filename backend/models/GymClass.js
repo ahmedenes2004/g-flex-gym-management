@@ -8,6 +8,11 @@ const gymClassSchema = mongoose.Schema({
     description: {
         type: String,
     },
+    category: {
+        type: String,
+        required: [true, 'Please add a class category'],
+        default: 'Fitness'
+    },
     trainer: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

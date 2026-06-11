@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Classes from './pages/Classes';
+import MyClasses from './pages/MyClasses';
 import Payments from './pages/Payments';
 import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
@@ -54,6 +55,11 @@ function App() {
       <Route path="/classes" element={
         <ProtectedRoute>
           <Classes />
+        </ProtectedRoute>
+      } />
+      <Route path="/my-classes" element={
+        <ProtectedRoute>
+          <MyClasses />
         </ProtectedRoute>
       } />
       <Route path="/payments" element={

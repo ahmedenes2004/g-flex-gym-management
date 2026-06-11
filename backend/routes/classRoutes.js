@@ -1,5 +1,5 @@
 import express from 'express';
-import { getClasses, createClass, enrollClass, deleteClass, adminEnrollUser, adminUnenrollUser } from '../controllers/classController.js';
+import { getClasses, createClass, enrollClass, unenrollClass, deleteClass, adminEnrollUser, adminUnenrollUser } from '../controllers/classController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -19,6 +19,7 @@ router.route('/')
 
 router.route('/:id').delete(protect, adminOrTrainer, deleteClass);
 router.route('/:id/enroll').put(protect, enrollClass);
+router.route('/:id/unenroll').put(protect, unenrollClass);
 router.route('/:id/admin-enroll').put(protect, adminOrTrainer, adminEnrollUser);
 router.route('/:id/admin-unenroll').put(protect, adminOrTrainer, adminUnenrollUser);
 

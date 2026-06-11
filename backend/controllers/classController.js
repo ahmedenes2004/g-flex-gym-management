@@ -13,11 +13,12 @@ const getClasses = async (req, res, next) => {
 
 const createClass = async (req, res, next) => {
     try {
-        const { name, description, schedule, capacity } = req.body;
+        const { name, description, category, schedule, capacity } = req.body;
 
         const gymClass = new GymClass({
             name,
             description,
+            category: category || 'Fitness',
             schedule,
             capacity,
             trainer: req.user._id, // the creator becomes the trainer by default
@@ -140,4 +141,29 @@ const adminUnenrollUser = async (req, res, next) => {
     }
 };
 
-export { getClasses, createClass, enrollClass, deleteClass, adminEnrollUser, adminUnenrollUser };
+const unenrollClass = async (req, res, next) => {
+    try {
+        const gymClass = await GymClass.findById(req.params.id);
+
+        if (!gymClass) {
+            res.status(404);
+            throw new Error('Ders bulunamadı');
+        }
+
+        if (!gymClass.enrolledMembers.includes(req.user._id)) {
+            res.status(400);
+            throw new Error('Bu derse kayıtlı değilsiniz');
+        }
+
+        gymClass.enrolledMembers = gymClass.enrolledMembers.filter(
+            (id) => id.toString() !== req.user._id.toString()
+        );
+        await gymClass.save();
+
+        res.json({ message: 'Dersten kaydınız başarıyla silindi' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { getClasses, createClass, enrollClass, unenrollClass, deleteClass, adminEnrollUser, adminUnenrollUser };
