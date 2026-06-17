@@ -59,15 +59,15 @@ const Home = () => {
             <section className="glass glass-panel mb-4 text-center" style={{ padding: '2.5rem 1.5rem' }}>
                 <div className="grid grid-cols-3">
                     <div className="stat-item">
-                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>5000+</h2>
+                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>10</h2>
                         <p className="text-muted" style={{ fontSize: '0.95rem', marginTop: '0.25rem' }}>Aktif Sporcu</p>
                     </div>
                     <div className="stat-item">
-                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>25+</h2>
+                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>10</h2>
                         <p className="text-muted" style={{ fontSize: '0.95rem', marginTop: '0.25rem' }}>Uzman Antrenör</p>
                     </div>
                     <div className="stat-item">
-                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>40+</h2>
+                        <h2 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800 }}>50</h2>
                         <p className="text-muted" style={{ fontSize: '0.95rem', marginTop: '0.25rem' }}>Haftalık Grup Dersi</p>
                     </div>
                 </div>
